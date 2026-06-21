@@ -49,7 +49,7 @@ hls_model = hls4ml.converters.convert_from_keras_model(
     model,
     hls_config=config,
     backend='VivadoAccelerator',   # generates the full PYNQ system, not just IP
-    board='pynq-z2',
+    board='pynq-z1',               # or 'pynq-z2' — same chip; match the board you flashed
     output_dir='hls4ml_prj',
 )
 ```
@@ -69,7 +69,7 @@ artifacts.
 
 ### 4. Deploy (board, driven from Mac)
 
-Copy `.bit` / `.hwh` / driver to the PYNQ-Z2, then from Jupyter:
+Copy `.bit` / `.hwh` / driver to the PYNQ board, then from Jupyter:
 
 ```python
 from axi_stream_driver import NeuralNetworkOverlay

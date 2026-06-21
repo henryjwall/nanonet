@@ -1,7 +1,7 @@
 # Development flow
 
 The end-to-end pipeline for `nanonet`: how work is split across the **Mac**, a **cloud CI build host**,
-and the **PYNQ-Z2 board**.
+and the **PYNQ-Z1/Z2 board**.
 
 ## The core constraint
 
@@ -11,7 +11,7 @@ usable speed. So the work splits into three zones:
 
 ```
   ┌─────────────────────────┐     ┌──────────────────────────────┐     ┌────────────────────────┐
-  │  MacBook M3 (local)      │     │  Blacksmith CI (x86 Linux)   │     │  PYNQ-Z2 board         │
+  │  MacBook M3 (local)      │     │  Blacksmith CI (x86 Linux)   │     │  PYNQ-Z1/Z2 board      │
   │                          │     │                              │     │                        │
   │  • train net (QKeras)    │     │  • Vitis HLS: C++ → RTL      │     │  • boots PYNQ Linux    │
   │  • hls4ml convert → C++  │ ──▶ │  • Vivado: RTL → bitstream  │ ──▶ │  • load .bit overlay   │
@@ -82,3 +82,4 @@ job), and the job **burns free minutes while held open**. Requires an org admin 
       confirm it fits the 160 GB (or even 80 GB) runner.
 - [ ] **SSH enablement** — confirm the Blacksmith org admin can enable SSH access.
 - [ ] **Vivado/Vitis version pinning** — match the version hls4ml's current release is tested against.
+- [ ] **Board pick** — Z1 vs Z2 (same chip); set the matching `board=` flag + SD image once decided.
