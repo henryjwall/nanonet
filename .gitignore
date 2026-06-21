@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+.ipynb_checkpoints/
+
+# ML / training artifacts
+*.h5
+*.keras
+*.onnx
+*.ckpt
+data/
+datasets/
+
+# hls4ml / Vivado / Vitis build output
+hls4ml_prj/
+*_prj/
+vivado*.jou
+vivado*.log
+vitis*.log
+.Xil/
+*.str
+myproject*/
+
+# Bitstreams & hardware artifacts (keep these out of git; publish as CI artifacts)
+*.bit
+*.hwh
+*.xclbin
+*.bin
+
+# Docker / build scratch
+*.tar
+
+# OS
+.DS_Store
