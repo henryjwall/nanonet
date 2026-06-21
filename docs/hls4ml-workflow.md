@@ -20,8 +20,8 @@ ecosystem — Keras/QKeras, PyTorch/Brevitas — is Python). Train once in Pytho
 
 ```
   (1) TRAIN            (2) CONVERT             (3) BUILD                (4) DEPLOY
-  Keras / QKeras  ──▶  hls4ml → HLS C++  ──▶   Vitis HLS + Vivado  ──▶  PYNQ overlay
-  [ Mac ]              [ Mac ]                 [ CI / x86 Linux ]       [ board, from Mac ]
+  Keras / QKeras  ──▶  hls4ml → HLS C++  ──▶   Vivado HLS + Vivado ──▶  PYNQ overlay
+  [ Mac ]              [ Mac ]                 [ build VM / x86 ]       [ board, from Mac ]
 ```
 
 ### 1. Train + quantize (Mac)
@@ -54,18 +54,18 @@ hls_model = hls4ml.converters.convert_from_keras_model(
 )
 ```
 
-### 3. Build → bitstream (CI / x86 Linux)
+### 3. Build → bitstream (build VM / x86 Linux)
 
-This step shells out to **Vitis HLS** (C++ → RTL) and **Vivado** (RTL → `.bit`), so it runs on the Blacksmith
-runner, not the Mac.
+This step shells out to **Vivado HLS** (C++ → RTL) and **Vivado** (RTL → `.bit`), so it runs on the x86
+build VM, not the Mac.
 
 ```python
-hls_model.compile()                 # optional: bit-accurate C-sim (needs HLS headers → run on CI)
+hls_model.compile()                 # optional: bit-accurate C-sim (needs HLS headers → run on the build VM)
 hls_model.build(csim=False, synth=True, export=True, bitfile=True)
 ```
 
-Output: a `.bit` bitstream + `.hwh` hardware handoff + a generated Python driver. The CI job uploads these as
-artifacts.
+Output: a `.bit` bitstream + `.hwh` hardware handoff + a generated Python driver. `rsync` these back to the
+Mac, then on to the board.
 
 ### 4. Deploy (board, driven from Mac)
 
@@ -88,9 +88,9 @@ y_hw, latency, throughput = nn.predict(X_test, profile=True)
 | **Strategy** | `Latency` for small nets (unrolled), `Resource` for larger ones (shared, BRAM-backed weights). |
 | Per-layer overrides | `granularity='name'` lets you set precision/reuse per layer. |
 
-## What runs on the Mac vs. CI
+## What runs on the Mac vs. the build VM
 
-| Task | Mac | CI |
+| Task | Mac | Build VM |
 |---|---|---|
 | Train / quantize | ✅ | |
 | `convert_from_keras_model` (generate C++) | ✅ | |
@@ -100,10 +100,13 @@ y_hw, latency, throughput = nn.predict(X_test, profile=True)
 
 ## Gotchas
 
-- **You need both Vivado *and* Vitis HLS** in the build image — Vitis HLS synthesizes the network's C++,
-  Vivado builds the bitstream. Trim both to the **7-series / Zynq-7000** device family to keep the install small.
-- **Pin versions.** hls4ml documents which Vivado/Vitis versions it's tested against — mismatches cause
-  build failures. Install the version the current hls4ml release recommends.
+- **One install covers it.** For the `VivadoAccelerator` path you need `vivado_hls` (synthesizes the
+  network's C++) *and* `vivado` (builds the bitstream) — both ship inside a single **Vivado 2020.1**
+  install, so there's no separate Vitis install. Trim it to the **7-series / Zynq-7000** device family
+  to keep it small.
+- **Pin to Vivado 2020.1.** It's the last release with the classic `vivado_hls` that `VivadoAccelerator`
+  drives (2020.2+ replaced it with Vitis HLS, which that backend doesn't use). Newer versions cause
+  build failures on this path.
 - **Start tiny.** Get a minimal net through the *whole* pipeline before optimizing accuracy; the pipeline is
   the hard part, not the model.
 

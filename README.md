@@ -19,13 +19,13 @@ in a software-style flow (no hand-written RTL).
 nanonet/
 ├── README.md
 └── docs/
-    ├── development-flow.md   # the end-to-end pipeline: Mac → CI → board
+    ├── development-flow.md   # the end-to-end pipeline: Mac → build VM → board
     ├── pynq-z1-z2.md         # the board (Z1 or Z2): specs, why it fits, setup
     └── hls4ml-workflow.md    # train → convert → build → deploy, with code
 ```
 
 ## Docs
 
-- [Development flow](docs/development-flow.md) — how the whole pipeline fits together across Mac, CI, and board.
+- [Development flow](docs/development-flow.md) — how the whole pipeline fits together across Mac, build VM, and board.
 - [PYNQ-Z1/Z2](docs/pynq-z1-z2.md) — the target board (Z1 or Z2) and why it was chosen.
 - [hls4ml workflow](docs/hls4ml-workflow.md) — the model → hardware flow, with code skeletons.

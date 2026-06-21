@@ -1,0 +1,6 @@
+# The build context is the repo root, but the only things the Vivado image needs
+# are the installer tarball and the docker/ dir. Exclude everything else so Docker
+# doesn't tar up docs, git history, etc. alongside the ~35 GB installer.
+*
+!docker/
+!Xilinx_Unified_*.tar.gz

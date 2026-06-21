@@ -32,6 +32,9 @@ myproject*/
 
 # Docker / build scratch
 *.tar
+# AMD/Xilinx installer — huge and not redistributable; place at repo root for the build
+Xilinx_Unified_*.tar.gz
+Xilinx_Unified_*/
 
 # OS
 .DS_Store

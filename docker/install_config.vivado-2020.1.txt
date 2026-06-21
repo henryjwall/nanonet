@@ -1,0 +1,28 @@
+#### Vivado ML 2020.1 batch-install config — nanonet build host ####
+#
+# Trimmed to the Zynq-7000 / Artix-7 device family (XC7Z020 = PYNQ-Z1/Z2).
+# Free WebPACK edition: no license server required for the 7Z020.
+#
+# IMPORTANT — verify the Modules= names against YOUR installer. The exact device
+# labels are release-specific; the authoritative way to get a correct template is
+# to run, against the extracted installer:
+#
+#     ./xsetup -b ConfigGen          # pick "Vivado", then "Vivado HL WebPACK"
+#
+# That writes ~/.Xilinx/install_config.txt with every Module for THIS release;
+# then just flip the device families you don't want to :0 and keep this header.
+# Destination= below MUST match INSTALL_DIR in the Dockerfile (/opt/Xilinx).
+
+Edition=Vivado HL WebPACK
+Product=Vivado
+Destination=/opt/Xilinx
+
+# Devices: Zynq-7000 + Artix-7 ON (Z-7020 fabric is Artix-7 class); all else OFF.
+Modules=Zynq-7000:1,Artix-7:1,Kintex-7:0,Virtex-7:0,Spartan-7:0,Kintex UltraScale:0,Kintex UltraScale+:0,Virtex UltraScale:0,Virtex UltraScale+:0,Zynq UltraScale+ MPSoC:0,Zynq UltraScale+ RFSoC:0,DocNav:0,System Generator for DSP:0,Model Composer:0
+
+# No license-manager step, no telemetry, no shortcuts (headless container).
+InstallOptions=Acquire or Manage a License Key:0,Enable WebTalk for Vivado to send usage statistics to Xilinx:0
+CreateProgramGroupShortcuts=0
+CreateShortcutsForAllUsers=0
+CreateDesktopShortcuts=0
+CreateFileAssociation=0
